@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input Keuangan</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 1em; background-color: #f0f8ff; }
+        #loveCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; display: block; }
+        .container { background: white; padding: 2em; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 450px; z-index: 1; }
+        h2 { text-align: center; color: #333; margin-top: 0; }
+        .custom-message { background-color: #fffbe5; border: 1px solid #ffeb8e; color: #7b6f3a; text-align: center; font-weight: 600; padding: 0.8em; border-radius: 6px; margin-bottom: 2em; }
+        .form-group { margin-bottom: 1.2em; }
+        label { display: block; margin-bottom: 0.5em; color: #555; font-weight: 600; }
+        input, select { width: 100%; padding: 0.8em; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 1em; }
+        button { width: 100%; padding: 0.9em; border: none; background-color: #007BFF; color: white; font-size: 1em; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
+        button:disabled { background-color: #9ac8ff; cursor: wait; }
+        input:disabled, select:disabled { background-color: #f0f0f0; }
+        #status { text-align: center; margin-top: 1.5em; font-weight: bold; min-height: 20px; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <canvas id="loveCanvas"></canvas>
+    <div class="container">
+        <h2>📝 Form Input Keuangan</h2>
+        <div class="custom-message">Hai, Cantik. Jangan boros-boros ya ❤️</div>
+        <form id="keuanganForm">
+            <div class="form-group"><label for="tanggal">Tanggal</label><input type="date" name="tanggal" id="tanggal" required></div>
+            <div class="form-group"><label for="keterangan">Keterangan</label><input type="text" name="keterangan" required></div>
+            <div class="form-group"><label for="debet">Debet (Pengeluaran)</label><input type="text" name="debet" id="debet" placeholder="Contoh: 50.000"></div>
+            <div class="form-group"><label for="kredit">Kredit (Pemasukan)</label><input type="text" name="kredit" id="kredit" placeholder="Contoh: 1.000.000"></div>
+            <div class="form-group"><label for="tipe">Tipe</label><select name="tipe" id="tipeSelect" required><option value="">Memuat Tipe...</option></select></div>
+            <div class="form-group"><label for="kategori">Kategori</label><select name="kategori" id="kategoriSelect" required disabled><option value="">Pilih Tipe dulu...</option></select></div>
+            <div class="form-group"><label for="note">Note</label><input type="text" name="note" id="note"></div>
+            <button type="submit" id="submitButton">Simpan</button>
+        </form>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        // GANTI URL INI DENGAN URL WEB APP ANDA
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzn_IDHEv-_8MoaxeSsXsZPGQYTHigzMJQPObg4OjivGbcJoTGl7rpBAwBDsUoz8PQL_g/exec';
+
+        // --- Variabel Elemen ---
+        const form = document.getElementById('keuanganForm');
+        const statusDiv = document.getElementById('status');
+        const submitButton = document.getElementById('submitButton');
+        const tanggalInput = document.getElementById('tanggal');
+        const debetInput = document.getElementById('debet');
+        const kreditInput = document.getElementById('kredit');
+        const tipeSelect = document.getElementById('tipeSelect');
+        const kategoriSelect = document.getElementById('kategoriSelect');
+
+        // --- Logika Animasi Canvas (Tidak ada perubahan) ---
+        const canvas = document.getElementById('loveCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let hearts = []; const heartCount = 100;
+        function createHeart() { return { x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height, size: Math.random() * 20 + 10, speed: Math.random() * 2 + 1, opacity: Math.random() * 0.5 + 0.3 }; }
+        function drawHeart(h) { ctx.fillStyle = `rgba(255, 105, 180, ${h.opacity})`; ctx.beginPath(); const t = h.size * 0.3; ctx.moveTo(h.x, h.y + t); ctx.bezierCurveTo(h.x, h.y, h.x - h.size / 2, h.y, h.x - h.size / 2, h.y + t); ctx.bezierCurveTo(h.x - h.size / 2, h.y + (h.size + t) / 2, h.x, h.y + (h.size + t) / 2, h.x, h.y + h.size); ctx.bezierCurveTo(h.x, h.y + (h.size + t) / 2, h.x + h.size / 2, h.y + (h.size + t) / 2, h.x + h.size / 2, h.y + t); ctx.bezierCurveTo(h.x + h.size / 2, h.y, h.x, h.y, h.x, h.y + t); ctx.closePath(); ctx.fill(); }
+        for (let i = 0; i < heartCount; i++) { hearts.push(createHeart()); }
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); hearts.forEach((h, i) => { h.y += h.speed; if (h.y > canvas.height) hearts[i] = createHeart(); drawHeart(h); }); requestAnimationFrame(animate); }
+        animate();
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // --- Logika Form ---
+        function formatNumber(input) { let v = input.value.replace(/[^0-9]/g, ''); input.value = v ? parseInt(v, 10).toLocaleString('id-ID') : ''; }
+        debetInput.addEventListener('keyup', () => formatNumber(debetInput));
+        kreditInput.addEventListener('keyup', () => formatNumber(kreditInput));
+        
+        // =================================================================
+        // === PERBAIKANNYA ADA DI DUA BARIS DI BAWAH INI ===
+        // =================================================================
+        debetInput.addEventListener('input', () => { kreditInput.disabled = debetInput.value.length > 0; if (kreditInput.disabled) kreditInput.value = ''; });
+        kreditInput.addEventListener('input', () => { debetInput.disabled = kreditInput.value.length > 0; if (debetInput.disabled) debetInput.value = ''; });
+
+        // --- Logika Dropdown Dinamis dengan Fetch (Tidak ada perubahan) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            tanggalInput.valueAsDate = new Date();
+            fetch(`${SCRIPT_URL}?action=getTipe`)
+                .then(res => res.json())
+                .then(tipeList => {
+                    tipeSelect.innerHTML = '<option value="" disabled selected>Pilih Tipe...</option>';
+                    tipeList.forEach(tipe => tipeSelect.add(new Option(tipe, tipe)));
+                }).catch(err => tipeSelect.innerHTML = '<option>Gagal memuat</option>');
+        });
+
+        tipeSelect.addEventListener('change', () => {
+            const selectedTipe = tipeSelect.value;
+            kategoriSelect.innerHTML = '<option>Memuat...</option>';
+            kategoriSelect.disabled = true;
+            if (selectedTipe) {
+                fetch(`${SCRIPT_URL}?action=getKategori&tipe=${selectedTipe}`)
+                    .then(res => res.json())
+                    .then(kategoriList => {
+                        kategoriSelect.innerHTML = '<option value="" disabled selected>Pilih Kategori...</option>';
+                        kategoriList.forEach(k => kategoriSelect.add(new Option(k, k)));
+                        kategoriSelect.disabled = false;
+                    }).catch(err => kategoriSelect.innerHTML = '<option>Gagal memuat</option>');
+            }
+        });
+
+        // --- Logika Pengiriman Form dengan Fetch (Tidak ada perubahan) ---
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            if (!debetInput.value && !kreditInput.value) { alert('Harap isi Debet atau Kredit.'); return; }
+            submitButton.disabled = true;
+            submitButton.textContent = 'Menyimpan...';
+
+            fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form) })
+                .then(res => res.json())
+                .then(data => {
+                    statusDiv.textContent = data.message;
+                    if (data.status === 'success') {
+                        statusDiv.className = 'success';
+                        form.reset();
+                        tanggalInput.valueAsDate = new Date();
+                        debetInput.disabled = false; // Pastikan debet aktif lagi
+                        kreditInput.disabled = false; // Pastikan kredit aktif lagi
+                        kategoriSelect.innerHTML = '<option value="">Pilih Tipe dulu...</option>';
+                        kategoriSelect.disabled = true;
+                    } else { statusDiv.className = 'error'; }
+                })
+                .catch(error => {
+                    statusDiv.className = 'error';
+                    statusDiv.textContent = 'Error: ' + error.message;
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Simpan';
+                    setTimeout(() => statusDiv.textContent = '', 4000);
+                });
+        });
+    </script>
+</body>
+</html>
