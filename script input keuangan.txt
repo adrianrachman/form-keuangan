@@ -1,9 +1,10 @@
+mode incognito
 https://script.google.com/macros/s/AKfycbzQtHoosfc1HOFoWT3wma2Z48k08RboBDEAXsAhEN-lfC-pBixMaLU9x_qIzNkLykyrmQ/exec
 
-mode incognito
 
-
-
-https://script.google.com/macros/s/AKfycbzn_IDHEv-_8MoaxeSsXsZPGQYTHigzMJQPObg4OjivGbcJoTGl7rpBAwBDsUoz8PQL_g/exec
 
 normal
+https://script.google.com/macros/s/AKfycbzn_IDHEv-_8MoaxeSsXsZPGQYTHigzMJQPObg4OjivGbcJoTGl7rpBAwBDsUoz8PQL_g/exec
+
+
+
